@@ -23,14 +23,42 @@ const MovieType = new GraphQLObjectType({
     backdrop_path: { type: GraphQLString },
     overview: { type: GraphQLString },
      release_date: { type: GraphQLString },
-  theDetails: {
-    type: new GraphQLList(MovieDetailType),
+  details: {
+    type: MovieDetailType,
     resolve(parent,args){
        return axios.get(`${BASE_URL}/3/movie/${parent.id}?api_key=${API_KEY}`)
       .then(response => response.data);
     }
+  },
+  theTrailer: {
+    type: TrailerType,
+    resolve(parent, args) {
+      return axios.get(`${BASE_URL}/3/movie/${parent.id}/videos?api_key=${API_KEY}`)
+      .then(response => response.data.results[0]);
+    }
   }
   })
+});
+
+const TrailerType = new GraphQLObjectType({
+  name: 'Trailer',
+  fields: () => ({
+    id: { type: GraphQLID },
+    key: { type: GraphQLString },
+    name: { type: GraphQLString },
+    site: { type: GraphQLString },
+    size: { type: GraphQLString }
+  })
+});
+
+const getData = new GraphQLObjectType({
+  name: 'list',
+  fields: () => ({
+    id: { type: GraphQLID },
+    budget: { type: GraphQLString },
+    overview: { type: GraphQLString },
+    title: { type: GraphQLString }
+})
 });
 
 const MovieDetailType = new GraphQLObjectType({
@@ -42,11 +70,17 @@ const MovieDetailType = new GraphQLObjectType({
     revenue: { type: GraphQLString },
     poster_path: { type: GraphQLString },
   theMovie: {
-    type: new GraphQLList(MovieType),
+    type: MovieType,
     resolve(parent, args) {
-      console.log('parent is ' + parent.title);
-      return axios.get(`${BASE_URL}/3/search/movie?api_key=${API_KEY}&query=${parent.title}`)
-      .then(response => response.data.results);
+      return axios.get(`${BASE_URL}/3/search/movie${parent.id}?api_key=${API_KEY}&query=${parent.title}`)
+      .then(response => response.data);
+    }
+  },
+  theTrailer: {
+    type: TrailerType,
+    resolve(parent, args) {
+      return axios.get(`${BASE_URL}/3/movie/${parent.id}/videos?api_key=${API_KEY}`)
+      .then(response => response.data.results[0]);
     }
   }
   })
@@ -70,8 +104,23 @@ const RootQuery = new GraphQLObjectType({
         return axios.get(`${BASE_URL}/3/movie/${args.id}?api_key=${API_KEY}`)
       .then(response => response.data);
       }
+    },
+    trailer: {
+      type: TrailerType,
+      args: { id: { type: GraphQLID }},
+      resolve(parent, args) {
+        return axios.get(`${BASE_URL}/3/movie/${args.id}/videos?api_key=${API_KEY}`)
+      .then(response => response.data.results[0]);
+      }
+    },
+    getData: {
+      type: getData,
+      resolve(parent, args) {
+         return axios.get(`${BASE_URL}/3/movie/latest?api_key=${API_KEY}`)
+      .then(response => response.data);
+      }
+      }
     }
-  }
 });
 
 module.exports = new GraphQLSchema({
