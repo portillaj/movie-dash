@@ -4,12 +4,12 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 
-import MovieList from './components/MovieList';
+import MovieList from './containers/MovieList/MovieList';
 
 // apollo client setup
 const client = new ApolloClient({
   // eslint-disable-next-line
-  uri: 'http://localhost:5000/graphql',
+  uri: '/graphql',
   link: new HttpLink(),
   cache: new InMemoryCache(),
 });

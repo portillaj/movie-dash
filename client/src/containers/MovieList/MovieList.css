@@ -1,0 +1,8 @@
+.movieList {
+  max-width: 200px;
+  display: inline-block;
+}
+
+.movie-title {
+  margin-top: 10px;
+}

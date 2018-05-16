@@ -1,0 +1,12 @@
+.main-background {
+  background-color: #6A9B98;
+}
+.list {
+      display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: center;
+    list-style-type: none;
+    color: #808080;
+}

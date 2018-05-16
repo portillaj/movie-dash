@@ -1,7 +1,6 @@
 module.exports = {
      "extends": [
     "airbnb",
-    "prettier",
     "prettier/react"
   ],
   "parser": "babel-eslint",
@@ -56,6 +55,10 @@ module.exports = {
     "react/display-name": 1,
     "react/react-in-jsx-scope": 0,
     "react/prefer-stateless-function": 0,
+    "react/prop-types": [
+    "enabled",
+      { "ignore": "ignore", "customValidators": "customValidator" }
+    ],
     "react/forbid-prop-types": 0,
     "react/no-unescaped-entities": 0,
     "jsx-a11y/accessible-emoji": 0,
@@ -109,9 +112,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  "plugins": [
-    // "html",
-    "prettier"
-  ]
+  }
 };

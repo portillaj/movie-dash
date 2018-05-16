@@ -51,14 +51,17 @@ const TrailerType = new GraphQLObjectType({
   })
 });
 
-const getData = new GraphQLObjectType({
-  name: 'list',
+const LatestMovieType = new GraphQLObjectType({
+  name: 'latest',
   fields: () => ({
-    id: { type: GraphQLID },
-    budget: { type: GraphQLString },
-    overview: { type: GraphQLString },
-    title: { type: GraphQLString }
-})
+      id: { type: GraphQLID },
+      vote_average: { type: GraphQLString },
+      popularity: { type: GraphQLString },
+      title: { type: GraphQLString },
+      poster_path: { type: GraphQLString },
+      overview: { type: GraphQLString },
+      release_date: { type: GraphQLString }
+  })
 });
 
 const MovieDetailType = new GraphQLObjectType({
@@ -113,13 +116,15 @@ const RootQuery = new GraphQLObjectType({
       .then(response => response.data.results[0]);
       }
     },
-    getData: {
-      type: getData,
+    latest: {
+      type: new GraphQLList(LatestMovieType),
       resolve(parent, args) {
-         return axios.get(`${BASE_URL}/3/movie/latest?api_key=${API_KEY}`)
-      .then(response => response.data);
-      }
-      }
+         return axios.get(`${BASE_URL}/3/movie/now_playing?api_key=${API_KEY}`)
+      .then(response => {
+        let data = response.data.results;
+        return data;
+      })}
+    }
     }
 });
 
